@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+
+  /* Тёмная премиальная палитра KULTURA — глубокий графит-navy + оранжевый акцент */
+  --color-void: #0b0d14;        /* фон страницы — почти чёрный navy */
+  --color-ink: #0e111a;         /* поверхность секций */
+  --color-panel: #141824;       /* карточки */
+  --color-raised: #1b2030;      /* приподнятые элементы */
+
+  --color-bone: #eef0f5;        /* основной светлый текст */
+  --color-mist: #9096a6;        /* приглушённый текст */
+  --color-dim: #565d70;         /* тусклый / подписи */
+
+  --color-ember: #f26522;       /* ФИРМЕННЫЙ акцент — дозированно */
+  --color-ember-soft: #ff7d42;
+
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  * {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  html {
+    scroll-padding-top: 88px;
+    background: var(--color-void);
+  }
+
+  /* Lenis smooth scroll */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-void);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+    font-weight: 300;
+    letter-spacing: 0.01em;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--color-ember);
+    color: #fff;
+  }
+
+  /* тонкий кастомный скроллбар в тон */
+  ::-webkit-scrollbar { width: 9px; }
+  ::-webkit-scrollbar-track { background: var(--color-void); }
+  ::-webkit-scrollbar-thumb { background: #23293a; border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: #2e3548; }
+}
+
+@layer utilities {
+  /* фирменный тонкий трекинг для заголовков-логотипа */
+  .tracking-brand { letter-spacing: 0.22em; }
+  .tracking-wide2 { letter-spacing: 0.12em; }
+
+  .text-balance { text-wrap: balance; }
+
+  /* «музейная» тонкая линия-разделитель */
+  .hairline { border-color: rgba(255, 255, 255, 0.08); }
+
+  .glass {
+    background: rgba(11, 13, 20, 0.38);
+    backdrop-filter: saturate(185%) blur(28px);
+    -webkit-backdrop-filter: saturate(185%) blur(28px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.04),
+      0 10px 40px -12px rgba(0, 0, 0, 0.5);
+  }
+
+  .ken {
+    animation: ken 22s var(--ease-soft) infinite alternate;
+  }
+
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+@keyframes ken {
+  from { transform: scale(1.02) translateY(0); }
+  to { transform: scale(1.12) translateY(-2%); }
+}
+
+@keyframes scrollHint {
+  0% { transform: translateY(0); opacity: 0; }
+  40% { opacity: 1; }
+  100% { transform: translateY(12px); opacity: 0; }
+}
+
+@keyframes marqueeX {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}

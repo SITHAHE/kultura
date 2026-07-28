@@ -69,6 +69,43 @@ export function Preloader() {
   )
 }
 
+/* ——— WARP-ПЕРЕХОД: короткая заставка при прыжке по секциям ——— */
+export function WarpOverlay({ active }) {
+  return (
+    <AnimatePresence>
+      {active && (
+        <motion.div
+          key="warp"
+          className="fixed inset-0 z-[95] flex flex-col items-center justify-center bg-void"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <motion.img
+            src={asset('logo-mark.png')}
+            alt=""
+            aria-hidden="true"
+            draggable="false"
+            className="h-14 w-auto md:h-16"
+            initial={{ opacity: 0, scale: 0.92, y: 6 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          />
+          <div className="relative mt-8 h-px w-40 overflow-hidden bg-white/12">
+            <motion.div
+              className="absolute inset-y-0 left-0 bg-ember"
+              initial={{ width: '0%' }}
+              animate={{ width: '100%' }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            />
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+}
+
 /* ——— ТОНКИЙ ИНДИКАТОР ПРОГРЕССА СКРОЛЛА ——— */
 export function ScrollProgress() {
   const { scrollYProgress } = useScroll()

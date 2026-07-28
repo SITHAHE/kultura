@@ -1,45 +1,28 @@
 import { useState, useEffect, useRef } from 'react'
-import { motion, AnimatePresence, useScroll, useTransform, useSpring, useMotionValueEvent } from 'framer-motion'
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { Reveal, SectionLabel, RevealHeading } from '../ui.jsx'
 import { projects } from '../data.js'
 
-const SHADOW = { textShadow: '0 1px 24px rgba(0,0,0,0.55)' }
+const SHADOW = { textShadow: '0 1px 24px rgba(0,0,0,0.6)' }
 
 export default function Projects() {
   const [active, setActive] = useState(null)
-  const [current, setCurrent] = useState(0)
-  const [vw, setVw] = useState(typeof window !== 'undefined' ? window.innerWidth : 1440)
-  const wrapRef = useRef(null)
-  const n = projects.length
-
-  useEffect(() => {
-    const onResize = () => setVw(window.innerWidth)
-    window.addEventListener('resize', onResize)
-    return () => window.removeEventListener('resize', onResize)
-  }, [])
-
-  const { scrollYProgress } = useScroll({ target: wrapRef, offset: ['start start', 'end end'] })
-
-  // Линейное непрерывное движение + пружина для инерции (лента «догоняет» скролл).
-  const xRaw = useTransform(scrollYProgress, [0, 1], [0, -(n - 1) * vw])
-  const x = useSpring(xRaw, { stiffness: 55, damping: 22, mass: 0.9 })
-
-  useMotionValueEvent(scrollYProgress, 'change', (v) => {
-    setCurrent(Math.min(n - 1, Math.round(v * (n - 1))))
-  })
 
   useEffect(() => {
     document.body.style.overflow = active ? 'hidden' : ''
     const onKey = (e) => e.key === 'Escape' && setActive(null)
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      document.body.style.overflow = ''
+    }
   }, [active])
 
   return (
     <section id="projects" className="bg-void">
       {/* интро-экран — визуально отделяет проекты от материалов */}
       <div className="border-t hairline">
-        <div className="mx-auto flex min-h-[62vh] max-w-[1280px] flex-col justify-center px-6 py-28 md:px-10 md:py-36">
+        <div className="mx-auto flex min-h-[54svh] max-w-[1280px] flex-col justify-center px-6 py-24 md:px-10 md:py-32">
           <Reveal>
             <SectionLabel>Проекты</SectionLabel>
           </Reveal>
@@ -51,30 +34,24 @@ export default function Projects() {
           <div className="mt-8">
             <Reveal delay={0.1}>
               <p className="max-w-md text-[16px] font-[300] leading-relaxed text-mist">
-                Интерьеры, где мебель KULTURA становится частью архитектуры.
+                Интерьеры и пространства, где мебель KULTURA становится частью архитектуры.
               </p>
             </Reveal>
           </div>
         </div>
       </div>
 
-      {/* горизонтальный pinned-слайдер */}
-      <div ref={wrapRef} className="relative" style={{ height: `${(n - 1) * 118 + 100}vh` }}>
-        <div className="sticky top-0 h-[100svh] w-full overflow-hidden bg-void">
-          <motion.div style={{ x }} className="flex h-full">
-            {projects.map((p, i) => (
-              <ProjectPanel key={p.id} project={p} index={i} width={vw} onOpen={() => setActive(p)} />
-            ))}
-          </motion.div>
-
-          <div className="pointer-events-none absolute right-6 top-7 z-20 md:right-10 md:top-9">
-            <span className="text-[12px] tracking-brand text-bone/80" style={SHADOW}>
-              <span className="text-ember">{String(current + 1).padStart(2, '0')}</span>
-              <span className="mx-2 text-bone/40">/</span>
-              {String(n).padStart(2, '0')}
-            </span>
-          </div>
-        </div>
+      {/* вертикальная лента крупных карточек */}
+      <div className="space-y-5 px-4 pb-6 md:space-y-8 md:px-8 md:pb-10">
+        {projects.map((p, i) => (
+          <ProjectCard
+            key={p.id}
+            project={p}
+            index={i}
+            total={projects.length}
+            onOpen={() => setActive(p)}
+          />
+        ))}
       </div>
 
       <AnimatePresence>
@@ -84,56 +61,67 @@ export default function Projects() {
   )
 }
 
-/* Чистая полноэкранная панель — акцент на фото */
-function ProjectPanel({ project, index, width, onOpen }) {
+/* Крупная карточка проекта во всю ширину — акцент на фото */
+function ProjectCard({ project, index, total, onOpen }) {
+  const ref = useRef(null)
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
+  const y = useTransform(scrollYProgress, [0, 1], ['-6%', '6%'])
+
   return (
-    <article className="relative h-full shrink-0 overflow-hidden" style={{ width }}>
+    <article ref={ref}>
       <button
         onClick={onOpen}
-        className="group absolute inset-0 block cursor-pointer"
         aria-label={`Открыть проект: ${project.title}`}
+        className="group relative block h-[88svh] max-h-[900px] min-h-[440px] w-full cursor-pointer overflow-hidden rounded-2xl border border-white/10 shadow-[0_40px_90px_-30px_rgba(0,0,0,0.85)] md:h-[94svh]"
       >
-        <img
-          src={project.cover}
-          alt={project.title}
-          className="h-full w-full object-cover transition-transform duration-[2200ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
-        />
-        {/* только лёгкие краевые виньетки, без затемнения снизу */}
-        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-void/35 to-transparent" />
-        <div className="absolute inset-y-0 left-0 w-44 bg-gradient-to-r from-void/25 to-transparent" />
+        <motion.div style={{ y }} className="absolute inset-0 -top-[6%] h-[112%]">
+          <img
+            src={project.cover}
+            alt={project.title}
+            style={{ objectPosition: project.focus || 'center' }}
+            className="h-full w-full object-cover transition-transform duration-[2400ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
+          />
+        </motion.div>
+
+        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-void/45 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-[46%] bg-gradient-to-t from-void/85 via-void/35 to-transparent" />
+
+        {/* счётчик */}
+        <div className="absolute right-5 top-5 z-10 md:right-8 md:top-8">
+          <span className="text-[12px] tracking-brand text-bone/80" style={SHADOW}>
+            <span className="text-ember">{String(index + 1).padStart(2, '0')}</span>
+            <span className="mx-2 text-bone/40">/</span>
+            {String(total).padStart(2, '0')}
+          </span>
+        </div>
+
+        {/* вертикальное имя слева */}
+        <div
+          className="pointer-events-none absolute left-4 top-1/2 z-10 select-none text-[11px] uppercase tracking-brand text-bone/80 md:left-7 md:text-[12px]"
+          style={{ writingMode: 'vertical-rl', transform: 'translateY(-50%) rotate(180deg)', ...SHADOW }}
+        >
+          {project.label}
+        </div>
+
+        {/* низ: подпись */}
+        <div className="absolute inset-x-0 bottom-0 z-10 px-6 pb-10 md:px-12 md:pb-14">
+          <div className="mx-auto max-w-[1280px]">
+            <h3
+              className="text-[9vw] font-[200] leading-tight tracking-tight text-bone md:text-[3vw]"
+              style={SHADOW}
+            >
+              {project.title}
+            </h3>
+            <span
+              className="mt-3 inline-flex items-center gap-3 text-[12px] uppercase tracking-wide2 text-bone/90 md:mt-4"
+              style={SHADOW}
+            >
+              Смотреть проект
+              <span className="h-px w-9 bg-bone/50 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:w-16 group-hover:bg-ember" />
+            </span>
+          </div>
+        </div>
       </button>
-
-      {/* вертикальное имя слева */}
-      <div
-        className="pointer-events-none absolute left-4 top-1/2 select-none text-[12px] uppercase tracking-brand text-bone/85 md:left-8 md:text-[13px]"
-        style={{ writingMode: 'vertical-rl', transform: 'translateY(-50%) rotate(180deg)', ...SHADOW }}
-      >
-        {project.label}
-      </div>
-
-      {/* мета справа — только тип */}
-      <div className="pointer-events-none absolute right-6 top-1/2 hidden -translate-y-1/2 text-right md:block md:right-10">
-        <div className="text-[11px] uppercase tracking-wide2 text-ember" style={SHADOW}>
-          {project.type}
-        </div>
-      </div>
-
-      {/* низ: компактная подпись */}
-      <div className="absolute inset-x-0 bottom-0 px-6 pb-14 md:px-10 md:pb-16">
-        <div className="mx-auto max-w-[1280px]">
-          <h3 className="text-[6vw] font-[200] leading-tight tracking-tight text-bone md:text-[1.9vw]" style={SHADOW}>
-            {project.title}
-          </h3>
-          <button
-            onClick={onOpen}
-            className="group/btn mt-4 inline-flex items-center gap-3 text-[12px] uppercase tracking-wide2 text-bone/90"
-            style={SHADOW}
-          >
-            Смотреть проект
-            <span className="relative h-px w-9 bg-bone/50 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/btn:w-14 group-hover/btn:bg-ember" />
-          </button>
-        </div>
-      </div>
     </article>
   )
 }
@@ -159,9 +147,11 @@ function CaseOverlay({ project, onClose }) {
     >
       <div className="glass sticky top-0 z-10 flex items-center justify-between border-b hairline px-6 py-4 md:px-10">
         <div>
-          <span className="text-[11px] uppercase tracking-wide2 text-ember">
-            {project.type} · {project.city}
-          </span>
+          {project.designer && (
+            <span className="text-[11px] uppercase tracking-wide2 text-ember">
+              Дизайн — {project.designer}
+            </span>
+          )}
           <h3 className="text-[19px] font-[200] tracking-wide2 text-bone">{project.title}</h3>
         </div>
         <button
@@ -196,6 +186,11 @@ function CaseOverlay({ project, onClose }) {
                 </span>
               ))}
             </div>
+            {project.designer && (
+              <p className="mt-6 text-[13px] font-[300] text-dim">
+                Дизайн-проект — {project.designer}
+              </p>
+            )}
           </div>
         </div>
 

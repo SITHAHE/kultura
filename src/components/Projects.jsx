@@ -107,7 +107,7 @@ function ProjectCard({ project, index, total, onOpen }) {
         <div className="absolute inset-x-0 bottom-0 z-10 px-6 pb-10 md:px-12 md:pb-14">
           <div className="mx-auto max-w-[1280px]">
             <h3
-              className="text-[9vw] font-[200] leading-tight tracking-tight text-bone md:text-[3vw]"
+              className="text-[9vw] font-[200] leading-tight tracking-[0.04em] text-bone md:text-[3vw]"
               style={SHADOW}
             >
               {project.title}
@@ -170,7 +170,7 @@ function CaseOverlay({ project, onClose }) {
       >
         <div className="grid gap-10 md:grid-cols-12">
           <div className="md:col-span-8">
-            <h2 className="text-balance text-[9vw] font-[200] leading-[1.05] tracking-tight text-bone md:text-[3.4vw]">
+            <h2 className="text-balance text-[9vw] font-[200] leading-[1.05] tracking-[0.04em] text-bone md:text-[3.4vw]">
               {project.title}
             </h2>
           </div>

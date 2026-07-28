@@ -15,21 +15,20 @@ export function Philosophy() {
       <div className="mt-10 grid gap-14 md:grid-cols-12 md:gap-10">
         <div className="md:col-span-7">
           <RevealHeading
-            lines={['Мы возвращаем уважение', 'к столярному ремеслу.']}
+            lines={['Своё производство —', 'от чертежа до монтажа.']}
             className="text-[8vw] font-[200] leading-[1.05] tracking-tight text-bone md:text-[3.6vw]"
           />
         </div>
         <div className="md:col-span-5 md:pt-3">
           <Reveal delay={0.15}>
             <p className="text-[17px] font-[300] leading-relaxed text-mist">
-              KULTURA — это мастерская, где мебель проектируют инженеры, а собирают руки, помнящие
-              традиции большой европейской школы. Мы работаем с акриловым камнем, деревом и
-              натуральной фактурой так, чтобы результат жил десятилетиями — и с каждым годом
-              становился только дороже взгляду.
+              Конструкторское бюро, столярный цех, покрытие и сборка — на одной площадке в
+              Петербурге. Заказы не уходят подрядчикам, поэтому мы отвечаем и за сроки, и за каждый
+              шов.
             </p>
             <p className="mt-6 text-[17px] font-[300] leading-relaxed text-mist">
-              Здесь нет случайных деталей. Есть внимание — к линии, к торцу, к тому, как свет ложится
-              на поверхность.
+              Кухни, гардеробные, стеновые панели и корпусная мебель для частных интерьеров и
+              общественных пространств. Монтаж по России и Европе.
             </p>
           </Reveal>
         </div>
@@ -48,7 +47,7 @@ export function Statement() {
   return (
     <section ref={ref} className="relative h-[85svh] w-full overflow-hidden">
       <motion.div style={{ y, scale }} className="absolute inset-0">
-        <img src={asset('feature-hitech.jpg')} alt="" className="h-full w-full object-cover" />
+        <img src={asset('statement-craft.jpg')} alt="" className="h-full w-full object-cover" />
       </motion.div>
       <div className="absolute inset-0 bg-void/70" />
       <div
@@ -61,8 +60,8 @@ export function Statement() {
             className="max-w-4xl text-balance text-center text-[6.5vw] font-[200] leading-[1.15] tracking-tight text-bone md:text-[3vw]"
             style={{ textShadow: '0 2px 40px rgba(0,0,0,0.75)' }}
           >
-            «Форма мебели — это застывшая
-            <span className="text-ember"> культура</span> тех, кто её создаёт».
+            Полный цикл производства —
+            <span className="text-ember"> под одной крышей</span>.
           </p>
         </Reveal>
       </div>
@@ -71,15 +70,15 @@ export function Statement() {
 }
 
 /* ——— ПОЛНОЭКРАННАЯ ПАНЕЛЬ С ПАРАЛЛАКСОМ (общая) ——— */
-function ParallaxMedia({ image, alt, overlay = 'bg-void/45', children, className = '' }) {
+function ParallaxMedia({ id, image, alt, overlay = 'bg-void/45', objectPosition = 'center', children, className = '' }) {
   const ref = useRef(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
   const y = useTransform(scrollYProgress, [0, 1], ['-10%', '10%'])
 
   return (
-    <section ref={ref} className={`relative w-full overflow-hidden ${className}`}>
+    <section id={id} ref={ref} className={`relative w-full overflow-hidden ${className}`}>
       <motion.div style={{ y }} className="absolute inset-0 -top-[10%] h-[120%]">
-        <img src={image} alt={alt} className="h-full w-full object-cover" />
+        <img src={image} alt={alt} className="h-full w-full object-cover" style={{ objectPosition }} />
       </motion.div>
       <div className={`absolute inset-0 ${overlay}`} />
       {children}
@@ -90,7 +89,7 @@ function ParallaxMedia({ image, alt, overlay = 'bg-void/45', children, className
 /* ——— МАТЕРИАЛЫ ——— */
 export function Materials() {
   return (
-    <div id="materials">
+    <section id="materials" className="border-t hairline bg-void">
       {/* интро */}
       <div className="mx-auto max-w-[1280px] px-6 pt-32 pb-16 md:px-10 md:pt-44 md:pb-24">
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
@@ -99,55 +98,68 @@ export function Materials() {
               <SectionLabel>Материалы</SectionLabel>
             </Reveal>
             <RevealHeading
-              lines={['Три материала', 'и точная фурнитура']}
+              lines={materials.heading}
               delay={0.05}
-              className="mt-6 text-[9vw] font-[200] leading-[1.05] tracking-tight text-bone md:text-[3.4vw]"
+              className="mt-6 text-[9vw] font-[200] leading-[1.04] tracking-tight text-bone md:text-[3.6vw]"
             />
           </div>
           <Reveal delay={0.1}>
-            <p className="max-w-sm text-[15px] font-[300] leading-relaxed text-mist">
-              Мы не прячем фактуру за отделкой. Итальянский шпон, натуральный камень и бесшовный
-              акриловый массив — а ход каждой двери и ящика доверен фурнитуре Blum.
+            <p className="max-w-sm text-[15px] font-[300] leading-relaxed text-mist md:text-[16px]">
+              {materials.intro}
             </p>
           </Reveal>
         </div>
       </div>
 
-      {/* полноэкранные панели */}
-      {materials.map((m, i) => (
-        <ParallaxMedia
-          key={m.id}
-          image={m.image}
-          alt={m.name}
-          overlay="bg-gradient-to-t from-void via-void/45 to-void/25"
-          className="grain h-[88vh] min-h-[560px]"
-        >
-          {/* усиленный нижний скрим под текстом */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[62%] bg-gradient-to-t from-void via-void/80 to-transparent" />
-          <div className="relative mx-auto flex h-full max-w-[1280px] flex-col justify-end px-6 pb-16 md:px-10 md:pb-24">
-            <span
-              className="pointer-events-none absolute right-6 top-1/2 -translate-y-1/2 select-none text-[34vw] font-[100] leading-none text-white/[0.05] md:right-10 md:text-[22vw]"
-              aria-hidden="true"
-            >
-              {String(i + 1).padStart(2, '0')}
-            </span>
-            <Reveal>
-              <span className="text-[12px] uppercase tracking-brand text-ember">{m.caption}</span>
-            </Reveal>
-            <RevealHeading
-              lines={[m.name]}
-              delay={0.05}
-              className="mt-4 text-[13vw] font-[100] leading-[0.95] tracking-tight text-bone md:text-[6vw]"
-            />
-            <Reveal delay={0.12}>
-              <p className="mt-6 max-w-xl text-[16px] font-[400] leading-relaxed text-bone/80 md:text-[18px]">
-                {m.text}
-              </p>
-            </Reveal>
+      {/* полноэкранная панель с материалами */}
+      <ParallaxMedia
+        image={materials.image}
+        alt="Материалы KULTURA"
+        overlay="bg-gradient-to-t from-void via-void/60 to-void/35"
+        className="grain h-[46svh] min-h-[300px] md:h-[86svh] md:min-h-[560px]"
+      >
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[70%] bg-gradient-to-t from-void via-void/80 to-transparent md:via-void/85" />
+        <div className="relative mx-auto flex h-full max-w-[1280px] flex-col justify-end px-6 pb-8 md:px-10 md:pb-24">
+          <span className="text-[12px] uppercase tracking-brand text-ember md:mb-8">
+            {materials.caption}
+          </span>
+
+          {/* десктоп — три колонки поверх фото */}
+          <div className="mt-8 hidden md:grid md:grid-cols-3 md:gap-8">
+            {materials.items.map((m, i) => (
+              <Reveal key={m.name} delay={0.1 + i * 0.08}>
+                <div className="border-l border-white/15 pl-8 first:border-l-0 first:pl-0">
+                  <span className="text-[12px] tracking-brand text-ember/90">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <h3 className="mt-3 text-[26px] font-[200] tracking-tight text-bone">{m.name}</h3>
+                  <p className="mt-3 max-w-sm text-[15px] font-[300] leading-relaxed text-bone/80">
+                    {m.text}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
           </div>
-        </ParallaxMedia>
-      ))}
-    </div>
+        </div>
+      </ParallaxMedia>
+
+      {/* мобайл — список под фото */}
+      <div className="mx-auto max-w-[1280px] px-6 pb-24 pt-10 md:hidden">
+        <div className="divide-y divide-white/10">
+          {materials.items.map((m, i) => (
+            <Reveal key={m.name} delay={0.05 + i * 0.06}>
+              <div className="py-7 first:pt-0">
+                <span className="text-[12px] tracking-brand text-ember">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <h3 className="mt-2 text-[24px] font-[200] tracking-tight text-bone">{m.name}</h3>
+                <p className="mt-2 text-[15px] font-[300] leading-relaxed text-mist">{m.text}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
   )
 }
 
@@ -242,10 +254,10 @@ function CountUp({ to, from = 0, suffix = '', duration = 1.8 }) {
   )
 }
 
-/* ——— О МАСТЕРСКОЙ ——— */
+/* ——— О ПРОИЗВОДСТВЕ ——— */
 export function Workshop() {
   return (
-    <section id="about" className="mx-auto max-w-[1280px] px-6 py-32 md:px-10 md:py-44">
+    <section id="about" className="mx-auto max-w-[1280px] px-6 pt-32 pb-16 md:px-10 md:pt-44 md:pb-20">
       <div>
         <Reveal>
           <SectionLabel>О производстве</SectionLabel>
@@ -257,24 +269,14 @@ export function Workshop() {
         />
       </div>
 
-      {/* лид + принцип */}
+      {/* лид */}
       <div className="mt-14 grid gap-12 md:mt-20 md:grid-cols-12 md:gap-10">
-        <div className="md:col-span-5">
+        <div className="md:col-span-8">
           <Reveal>
-            <p className="text-[17px] font-[300] leading-relaxed text-mist">{about.lead}</p>
-            <p className="mt-6 text-[14px] font-[300] leading-relaxed text-dim">{about.note}</p>
-          </Reveal>
-        </div>
-        <div className="md:col-span-7 md:pl-10">
-          <Reveal delay={0.1}>
-            <figure className="border-l border-ember/40 pl-8 md:pl-12">
-              <blockquote className="text-balance text-[6vw] font-[100] leading-[1.15] tracking-tight text-bone md:text-[2.5vw]">
-                «{about.principle}»
-              </blockquote>
-              <figcaption className="mt-6 text-[13px] uppercase tracking-wide2 text-dim">
-                {about.principleNote}
-              </figcaption>
-            </figure>
+            <p className="text-[20px] font-[300] leading-relaxed text-bone md:text-[24px]">
+              {about.lead}
+            </p>
+            <p className="mt-8 text-[14px] font-[300] leading-relaxed text-dim">{about.note}</p>
           </Reveal>
         </div>
       </div>
@@ -283,7 +285,7 @@ export function Workshop() {
       <div className="mt-20 grid gap-px overflow-hidden border-t hairline md:mt-28 md:grid-cols-3">
         {about.facts.map((f, i) => (
           <Reveal key={f.label} delay={i * 0.1}>
-            <div className="group relative h-full border-b hairline py-12 md:border-b-0 md:border-l md:pl-10 md:first:border-l-0 md:first:pl-0">
+            <div className="group relative h-full border-b hairline pt-12 pb-8 md:border-b-0 md:border-l md:pb-2 md:pl-10 md:first:border-l-0 md:first:pl-0">
               <div className="text-[13vw] font-[100] leading-none tracking-tight text-bone md:text-[5.4vw]">
                 <CountUp to={f.value} from={f.from} suffix={f.suffix} />
               </div>

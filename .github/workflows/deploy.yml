@@ -17,7 +17,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  DEPLOY_DIR: preview
+  DEPLOY_DIR: ''
   PHOTOS_URL: https://pub.hyperagent.com/api/published/pbf01KYKZ6MC7_T45GG9SEC7K5MPFF/kultura-photos.tar.gz
 
 jobs:

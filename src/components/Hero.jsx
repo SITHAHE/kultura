@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { Magnetic } from './Extras.jsx'
 
@@ -13,8 +13,19 @@ const line = {
   }),
 }
 
-export default function Hero() {
+export default function Hero({ onWarp }) {
   const ref = useRef(null)
+  const [isMobile, setIsMobile] = useState(false)
+
+  // на мобильных отключаем параллакс и ken-burns — иначе фон «плывёт» под адресной строкой
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)')
+    const sync = () => setIsMobile(mq.matches)
+    sync()
+    mq.addEventListener('change', sync)
+    return () => mq.removeEventListener('change', sync)
+  }, [])
+
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '22%'])
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.15])
@@ -22,34 +33,42 @@ export default function Hero() {
 
   return (
     <section id="top" ref={ref} className="relative h-[100svh] w-full overflow-hidden grain">
-      <motion.div style={{ y, scale }} className="absolute inset-0">
+      <motion.div style={isMobile ? undefined : { y, scale }} className="absolute inset-0">
         <img
           src={asset('hero.jpg')}
           alt="Интерьер с мебелью KULTURA"
-          className="ken h-full w-full object-cover"
+          className={`h-full w-full object-cover ${isMobile ? '' : 'ken'}`}
         />
       </motion.div>
 
       {/* кинематографичные затемнения */}
-      <div className="absolute inset-0 bg-gradient-to-b from-void/75 via-void/35 to-void" />
-      <div className="absolute inset-0 bg-gradient-to-r from-void/50 via-transparent to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-b from-void/45 via-void/15 to-void md:from-void/75 md:via-void/35" />
+      <div className="absolute inset-0 bg-gradient-to-r from-void/30 via-transparent to-transparent md:from-void/50" />
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 hidden md:block"
         style={{ background: 'radial-gradient(ellipse 60% 55% at 50% 46%, rgba(11,13,20,0.55), transparent 70%)' }}
+      />
+      <div
+        className="absolute inset-0 md:hidden"
+        style={{
+          background:
+            'radial-gradient(ellipse 92% 42% at 50% 50%, rgba(11,13,20,0.6), rgba(11,13,20,0.28) 55%, transparent 75%)',
+        }}
       />
 
       <motion.div
         style={{ opacity: fade }}
-        className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center"
+        className="absolute inset-0 flex flex-col items-center justify-center px-6 pt-14 text-center md:pt-[7.5vh]"
       >
         <motion.span
           custom={0}
           variants={line}
           initial="hidden"
           animate="show"
-          className="mb-8 text-[11px] uppercase tracking-brand text-mist"
+          className="mb-8 whitespace-nowrap text-[11px] uppercase tracking-brand text-bone/90"
+          style={{ textShadow: '0 2px 26px rgba(0,0,0,0.95)' }}
         >
-          Мебель · Интерьеры · Санкт-Петербург
+          Мебель · Санкт-Петербург
         </motion.span>
 
         <h1 className="flex flex-col items-center text-balance font-[100] leading-[0.98] text-bone">
@@ -71,7 +90,8 @@ export default function Hero() {
             initial="hidden"
             animate="show"
             aria-hidden="true"
-            className="mt-6 block text-[4.6vw] font-[200] tracking-wide2 text-mist md:text-[1.7vw]"
+            className="mt-6 block text-[4.6vw] font-[300] tracking-wide2 text-bone md:text-[1.7vw]"
+            style={{ textShadow: '0 2px 26px rgba(0,0,0,0.95)' }}
           >
             искусство внимания к деталям
           </motion.span>
@@ -79,26 +99,17 @@ export default function Hero() {
 
         <motion.div custom={3} variants={line} initial="hidden" animate="show" className="mt-14">
           <Magnetic strength={0.4}>
-            <a
-              href="#projects"
-              className="group inline-flex items-center gap-3 text-[13px] uppercase tracking-wide2 text-bone"
+            <button
+              type="button"
+              onClick={() => onWarp?.('#projects')}
+              className="group inline-flex cursor-pointer items-center gap-3 text-[13px] uppercase tracking-wide2 text-bone"
             >
               Смотреть проекты
               <span className="relative h-px w-10 bg-bone/60 transition-all duration-500 group-hover:w-16 group-hover:bg-ember" />
-            </a>
+            </button>
           </Magnetic>
         </motion.div>
       </motion.div>
-
-      {/* индикатор скролла */}
-      <div className="absolute inset-x-0 bottom-8 flex justify-center">
-        <div className="h-11 w-6 rounded-full border border-white/20">
-          <span
-            className="mx-auto mt-2 block h-2 w-px bg-white/70"
-            style={{ animation: 'scrollHint 2s var(--ease-soft) infinite' }}
-          />
-        </div>
-      </div>
     </section>
   )
 }

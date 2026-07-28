@@ -4,7 +4,7 @@ export const projects = [
   {
     id: 'smolny',
     label: 'SMOLNIY',
-    title: 'Смольный',
+    title: 'SMOLNIY',
     designer: 'Cartelle Design',
     tags: ['Шпон ореха', 'Латунь', 'Столярное дело'],
     description:
@@ -16,7 +16,7 @@ export const projects = [
   {
     id: 'mrwhite',
     label: 'MR WHITE',
-    title: 'Mister White',
+    title: 'MR WHITE',
     designer: 'Cartelle Design',
     tags: ['Светлый дуб', 'Минимализм'],
     description:
@@ -30,7 +30,7 @@ export const projects = [
   {
     id: 'royalpark',
     label: 'ROYAL PARK',
-    title: 'Royal Park',
+    title: 'ROYAL PARK',
     designer: 'GN Design',
     tags: ['Тёмный шпон', 'Кожа', 'Латунь'],
     description:
@@ -42,7 +42,7 @@ export const projects = [
   {
     id: 'privilegia',
     label: 'PRIVELEGIA',
-    title: 'ЖК Привилегия',
+    title: 'PRIVELEGIA',
     designer: 'GN Design',
     tags: ['Массив и шпон', 'Кожа', 'Латунь'],
     description:
@@ -54,7 +54,7 @@ export const projects = [
   {
     id: 'avatar',
     label: 'AVATAR',
-    title: 'ЖК Avatar',
+    title: 'AVATAR',
     designer: null,
     tags: ['Шпон ореха', 'Мрамор', 'Латунь'],
     description:
@@ -68,7 +68,7 @@ export const projects = [
   {
     id: 'premier',
     label: 'PREMIER PALACE',
-    title: 'ЖК Premier Palace',
+    title: 'PREMIER PALACE',
     designer: null,
     tags: ['Шпон макассар', 'Латунь', 'Мрамор'],
     description:
@@ -82,7 +82,7 @@ export const projects = [
   {
     id: 'sbercity',
     label: 'SBERCITY',
-    title: 'СберСити',
+    title: 'SBERCITY',
     designer: null,
     tags: ['Массив', 'Ручная работа'],
     description:

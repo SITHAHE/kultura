@@ -31,8 +31,11 @@ export default function Header() {
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+        style={{ paddingTop: 'env(safe-area-inset-top)' }}
         className={`fixed inset-x-0 top-0 z-50 border-b transition-colors duration-500 ${
-          scrolled ? 'glass border-white/10' : 'border-transparent bg-transparent'
+          scrolled
+            ? 'glass border-white/10'
+            : 'border-white/10 bg-void/80 backdrop-blur-xl md:border-transparent md:bg-transparent md:backdrop-blur-none'
         }`}
       >
         <div className="mx-auto flex h-[74px] max-w-[1280px] items-center gap-6 px-6 md:px-10">
@@ -41,7 +44,7 @@ export default function Header() {
             <Wordmark className="h-[17px]" />
           </a>
 
-          <nav className="hidden flex-1 items-center justify-center gap-8 md:flex lg:gap-10">
+          <nav className="hidden flex-1 items-center justify-center gap-6 md:flex lg:gap-10">
             {links.map((l) => (
               <a
                 key={l.href}
@@ -56,7 +59,7 @@ export default function Header() {
 
           <a
             href={`tel:${'+79119270210'}`}
-            className="hidden flex-none whitespace-nowrap text-[13px] tracking-wide2 text-bone md:block"
+            className="hidden flex-none whitespace-nowrap text-[13px] tracking-wide2 text-bone lg:block"
           >
             +7 911 927-02-10
           </a>

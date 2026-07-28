@@ -1,0 +1,79 @@
+name: Build & Deploy
+
+# Сборка сайта и публикация на GitHub Pages (ветка gh-pages).
+# Пока deploy идёт в подпапку preview/ — живой сайт в корне не затрагивается.
+# Чтобы выкатить в корень, поменяйте DEPLOY_DIR ниже на пустую строку.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kultura-pages
+  cancel-in-progress: false
+
+env:
+  DEPLOY_DIR: preview
+  PHOTOS_URL: https://pub.hyperagent.com/api/published/pbf01KYKZ6MC7_T45GG9SEC7K5MPFF/kultura-photos.tar.gz
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Разовый бутстрап: возвращаем в исходники картинки, которых нет в main.
+      # Старые фото проектов забираем из ветки gh-pages, новые (AVATAR,
+      # PREMIER PALACE) — из архива, и коммитим всё обратно в main.
+      - name: Bootstrap image assets
+        run: |
+          set -euo pipefail
+          need=0
+          [ -f public/assets/projects/royalpark-1.jpg ] || need=1
+          [ -f public/assets/projects/avatar-1.jpg ] || need=1
+          if [ "$need" = "0" ]; then
+            echo "Картинки уже на месте — бутстрап пропускаем."
+            exit 0
+          fi
+
+          echo "Забираем существующие ассеты из gh-pages..."
+          git fetch --depth=1 origin gh-pages
+          mkdir -p public
+          git archive origin/gh-pages assets | tar -x -C public/
+          rm -f public/assets/index-*.js public/assets/index-*.css
+
+          echo "Скачиваем фото новых проектов..."
+          curl -fsSL "$PHOTOS_URL" -o /tmp/photos.tar.gz
+          tar -xzf /tmp/photos.tar.gz -C public/assets/projects
+
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A public/assets
+          if git diff --cached --quiet; then
+            echo "Нечего коммитить."
+          else
+            git commit -m "Восстановить фото проектов и добавить AVATAR / PREMIER PALACE"
+            git push origin HEAD:main
+          fi
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          destination_dir: ${{ env.DEPLOY_DIR }}
+          keep_files: true
+          commit_message: "Deploy ${{ env.DEPLOY_DIR || 'root' }} (${{ github.sha }})"

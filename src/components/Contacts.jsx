@@ -18,7 +18,7 @@ export default function Contacts() {
             />
             <Reveal delay={0.1}>
               <p className="mt-8 max-w-md text-[16px] font-[300] leading-relaxed text-mist">
-                Мы беремся за интерьеры, где важна каждая деталь — от частной резиденции до
+                Мы берёмся за интерьеры, где важна каждая деталь — от частной резиденции до
                 общественного пространства. Расскажите о задаче — остальное возьмём на себя.
               </p>
             </Reveal>
@@ -52,7 +52,9 @@ export default function Contacts() {
                   </div>
                   <div>
                     <span className="text-[11px] uppercase tracking-wide2 text-dim">Часы</span>
-                    <p className="mt-2 text-[17px] font-[300] text-bone">{contacts.hours}</p>
+                    <p className="mt-2 whitespace-nowrap text-[17px] font-[300] text-bone">
+                      {contacts.hours}
+                    </p>
                   </div>
                 </div>
 
@@ -70,8 +72,8 @@ export default function Contacts() {
               <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border hairline md:aspect-auto md:h-full md:min-h-[520px]">
                 <iframe
                   title="KULTURA на карте"
-                  src="https://yandex.ru/map-widget/v1/?ll=30.243723%2C59.958384&z=16&pt=30.243723,59.958384,pm2rdm&text=%D0%A1%D0%B0%D0%BD%D0%BA%D1%82-%D0%9F%D0%B5%D1%82%D0%B5%D1%80%D0%B1%D1%83%D1%80%D0%B3%2C%20%D0%A3%D1%80%D0%B0%D0%BB%D1%8C%D1%81%D0%BA%D0%B0%D1%8F%20%D1%83%D0%BB.%2C%204%D0%B2"
-                  className="h-full w-full"
+                  src="https://yandex.ru/map-widget/v1/?ll=30.2613800%2C59.9509500&z=17&pt=30.2613800,59.9509500,pm2rdm"
+                  className="absolute inset-0 block h-full w-full border-0"
                   style={{ filter: 'grayscale(1) invert(0.92) contrast(0.9) hue-rotate(180deg)' }}
                   loading="lazy"
                 />
@@ -97,8 +99,8 @@ function Footer() {
             <Wordmark className="h-[27px]" />
           </a>
           <p className="max-w-xs text-[13px] font-[300] leading-relaxed text-dim">
-            Производство мебели и изделий из акрилового камня. Проектирование · производство · монтаж
-            по России и Европе.
+            Мебельное производство полного цикла. Проектирование · производство · монтаж по России и
+            Европе.
           </p>
         </div>
         <div className="mt-12 flex flex-col gap-3 border-t hairline pt-6 text-[12px] tracking-wide2 text-dim sm:flex-row sm:items-center sm:justify-between">

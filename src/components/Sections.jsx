@@ -15,7 +15,7 @@ export function Philosophy() {
       <div className="mt-10 grid gap-14 md:grid-cols-12 md:gap-10">
         <div className="md:col-span-7">
           <RevealHeading
-            lines={['Своё производство —', 'от чертежа до монтажа.']}
+            lines={['От чертежа', 'до монтажа —', 'своими силами.']}
             className="text-[8vw] font-[200] leading-[1.05] tracking-tight text-bone md:text-[3.6vw]"
           />
         </div>

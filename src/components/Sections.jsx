@@ -15,7 +15,7 @@ export function Philosophy() {
       <div className="mt-10 grid gap-14 md:grid-cols-12 md:gap-10">
         <div className="md:col-span-7">
           <RevealHeading
-            lines={['От чертежа', 'до монтажа —', 'своими силами.']}
+            lines={['От чертежа', 'до монтажа.']}
             className="text-[8vw] font-[200] leading-[1.05] tracking-tight text-bone md:text-[3.6vw]"
           />
         </div>
@@ -60,7 +60,7 @@ export function Statement() {
             className="max-w-4xl text-balance text-center text-[6.5vw] font-[200] leading-[1.15] tracking-tight text-bone md:text-[3vw]"
             style={{ textShadow: '0 2px 40px rgba(0,0,0,0.75)' }}
           >
-            Полный цикл производства —
+            Полный цикл производства
             <span className="text-ember"> под одной крышей</span>.
           </p>
         </Reveal>
